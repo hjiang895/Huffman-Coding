@@ -23,7 +23,7 @@ Puff.jar        samples/
 
 The `src` directory a number of helper files that you will need to use. `FileIO.java` is an interface (ADT) for reading input and writing output, and `FileIOC.java` is an implementation of that interface. You will use this class for reading in the file you want to compress and for writing out the compressed file. I demonstrate how to use this class in the `Huff.java` file provided.
 
-In addition, the `src` directory contains well commented starter code for `Huff.java`. You might not use all this code, but it will help you read in a file character by character and write out to a binary file. 
+In addition, the `src` directory contains well commented starter code for `Huff.java` and `HuffTree.java`. The instructions here are mostly included in these two files.
 
 The `samples` directory contains a few test files that you can use to test your code. I highly recommend starting with `mississippi.txt`. 
 
@@ -46,32 +46,31 @@ Without writing any code, you can try out the jar files from a command line as f
 
 There three tasks involved in this problem set:
 
-1. Reading in a text file and keeping track of how many times you see each character in order to create a frequency table.
+1. Reading in a text file and keeping track of how many times you see each character in order to create a frequency table, which you will store in a `TreeMap`.
 
-2. Building a binary tree that you will then traverse to determine the bit sequence representing each character in your text (i.e., the Huffman coding for your input text), as demonstrated in class.
+2. Building a Huffman Tree.
 
-3. Writing this information, along with a Huffman encoded version of the original text, to a binary file, which will be your compressed file. 
+3. Extracting the Huffman codes from the Huffman Tree for each character in the text.
 
-I provide some code to get you started, but this will probably be a difficult problem set. You should start working on it right away. 
-
-You should think carefully about the overall design of the program because much of what you create for this problem set might be shared with the Puff program you will be writing for PS8. Obviously, the shared parts should be encapsulated in separate files with appropriate functions and documentation so that you can use these shared parts in both the Huff and Puff programs.
+4. Writing this information, along with a Huffman encoded version of the original text, to a binary file, which will be your compressed file. 
 
 
 ## Step 1: Creating a frequency table
-Create a `TreeMap` in `Huff.java` that will serve as your frequency table. It will map a character to its frequency.
+I've given you a `TreeMap` in `Huff.java` that will serve as your frequency table. It will map a character (stored as an Integer, which is the ASCII code for that character) to its frequency.
 
 Read in the input file as shown in `Huff.java` and consider each character. If the character aready exists, add 1 to its current frequency total (i.e., that character's value) in the `TreeMap`. Otherwise, enter 1 in its value in the `TreeMap`. 
 
 
-## Step 2: Building the binary Huffman tree
-Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. Here is one way to do this:
+## Step 2: Building the Huffman tree
+Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. 
 
-1. Create  a `HuffTree` class that you can use to implement a binary tree data structure. Here are some elements it probably should contain: 
+I have given you code for a class called `HuffTree`. Some of it has been implemented already:
 * A `Node` inner class that contains pointers to right child node, left child node, and parent node, along with a variable to store the character and a variable to store the weight. Non-leaf nodes will have null for their character variable, while leaf nodes will have null for their right and left child nodes. Note that it will be helpful to have a `toString()` method on `Node` just for sanity checking. 
 * A member variable that is a pointer to the top `Node`.
 * A member variable keeping track of the size. 
-* `HuffTree` should implement `Comparable`, which means that it will need a `compareTo()` method. The `compareTo()` method will compare the weights of two `HuffTrees` so that you can store `HuffTrees` in a Java `PriorityQueue` object. In your `compareTo()` method, if the calling object has a larger or equal weight, return 1. Otherwise return -1. 
-* You should have a method that can traverse a `HuffTree` from its top node down to its leaf nodes in order to determine what sequences of left and right turns (i.e., 0s and 1s) that were required to arrive at each leaf node. This will be the Huffman code of the character at that leaf node.
+* The implementation of `compareTo()`, which compares the weights of two `HuffTrees` so that you can store `HuffTrees` in a Java `PriorityQueue` object. In the `compareTo()` method, if the calling object has a larger or equal weight, return 1. Otherwise return -1. 
+
+For Step 2, you will implement the mergeTrees() method. 
 
 2. For each character key in your `TreeMap`, create a `HuffTree` instance. Initially, the `top` of each `HuffTree` will point at a `Node` that has null pointers for its right child and left child, and has the character variable set to the character and the weight variable set to the frequency of that character.
 
@@ -80,6 +79,9 @@ Next you are going to build a Huffman tree that you will be able to traverse to 
 4. You now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, `poll()` off the two `HuffTree`s with the smallest weights, **t1** and **t2**. Construct a new `HuffTree` **t** with **t1** and **t2** as **left** and **right** children, respectively, and with weight = t1.weight() + t2.weight(). This is so incredibly important, so don't ignore this detail! Insert the new `HuffTree` **t** into the priority queue. 
 
 ## Step 3: Extracting the Huffman codes for each character
+* You should have a method that can traverse a `HuffTree` from its top node down to its leaf nodes in order to determine what sequences of left and right turns (i.e., 0s and 1s) that were required to arrive at each leaf node. This will be the Huffman code of the character at that leaf node.
+
+
 After merging all these `HuffTree` objects, the `PriorityQueue` now contains exactly one element: the full Huffman tree for the input text. Remove the remaning `HuffTree` from the priority queue. Recursively walk the tree recording the bit path P (i.e., the Huffman code, the sequence of 0s and 1s). I have included pseudocode for reading off the leaves of a tree at the end of this README.
 
 * When the recursive walk arrives at a leaf with symbol A, you will know the Huffman code (i.e., the path P, the sequence of 0s and 1s) for character A. 
