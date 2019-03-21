@@ -61,7 +61,7 @@ I've given you a `TreeMap` in `Huff.java` called `charCounts` that will serve as
 Complete the implementation of `readInFile()` in `Huff.java`. For each character you read in, if that character aready exists as a key in the `TreeMap`, add 1 to its value (i.e., its current frequency total) in the `TreeMap`. Otherwise, add it as a key to the `TreeMap` with value `1`.
 
 
-## Task 2: Building the Huffman tree: `buildHuffmanTree()` in `Huff.java` and `mergeTrees()` in `HuffTree.java`
+## Task 2: Building the Huffman tree
 Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. Some of the code for this step will go in `Huff.java` and some of it will go in `HuffTree.java`.
 
 ### `mergeTrees()` in `HuffTree.java`
@@ -75,9 +75,10 @@ For each character key in your `TreeMap`, create a `HuffTree` instance. Initiall
 You will now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, follow this procedure to iteratively merge `HuffTree` objects into a single HuffmanTree: (1) create a new empty `HuffTree` object, called `t3`; (2) use the `poll()` method in `PriorityQueue` to get the two `HuffTree`s with the smallest weights, `t1` and `t2`. Call `mergeTrees()` on `t3` with the first argument as `t1` and the second argument as `t2`. Add `t3` to the `PriorityQueue` using `add()`. 
 
 
-## Task 3: Extracting the Huffman codes: `getCodes()` in `HuffTree.java` and `extractCodes()` in `Huff.java`
+## Task 3: Extracting the Huffman codes
 After merging all these `HuffTree` objects, the `PriorityQueue` now contains exactly one element: the full Huffman tree for the input text. Remove the remaning `HuffTree` from the priority queue, and save it to the `finalTree` instance variable. 
 
+###  `getCodes()` in `HuffTree.java`
 In `HuffTree.java`, complete the implementation of `getCodes()`. This method reads off the path to each leaf (character) in the calling `HuffTree` and saves out the character-path pair to its `codes` `TreeMap` instance variable. Here is some pseudocode you might find useful.
 
 ```
@@ -100,7 +101,8 @@ public String getCodes(Node n, String path) {
 }  
 ```
 
-Call the `getCodes()` method on `finalTree`, and then set `huffCodes` in `Huff.java` to equal the `codes` variable of `finalTree`.
+### `extractCodes()` in `Huff.java`
+In the `extractCode()` method in `Huff.java`, call the `getCodes()` method on `finalTree`, and then set `huffCodes` in `Huff.java` to equal the `codes` variable of `finalTree`.
 
 
 ## Task 4: Writing to a binary file: `writeOutFile()` in `Huff.java`
