@@ -42,9 +42,9 @@ Without writing any code, you can try out the jar files from a command line as f
 >                                       # if there's no output from diff, success!
 ```
 
-### Three tasks
+### Four tasks
 
-There three tasks involved in this problem set:
+There four tasks involved in this problem set:
 
 1. Reading in a text file and keeping track of how many times you see each character in order to create a frequency table, which you will store in a `TreeMap`.
 
@@ -62,7 +62,14 @@ Read in the input file as shown in `Huff.java` and consider each character. If t
 
 
 ## Step 2: Building the Huffman tree
-Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. 
+Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. Some of the code for this step will go in `Huff.java` and some of it will go in `HuffTree.java`.
+
+
+2. For each character key in your `TreeMap`, create a `HuffTree` instance. Initially, the `top` of each `HuffTree` will point at a `Node` that has null pointers for its right child and left child, and has the character variable set to the character and the weight variable set to the frequency of that character.
+
+3. Put all of these `HuffTree`s in a Java `PriorityQueue`. (*You SHOULD NOT create your own priority queue! Use Java's implementation, which you can read about [here](https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html)*). You can create a `PriorityQueue` by adding elements one by one with `add()` or by giving it a whole Collection (e.g., e.g., an `ArrayList` of the ordered keys of the `TreeMap`) of elements as an argument to the constructor.
+
+4. You now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, `poll()` off the two `HuffTree`s with the smallest weights, **t1** and **t2**. Construct a new `HuffTree` **t** with **t1** and **t2** as **left** and **right** children, respectively, and with weight = t1.weight() + t2.weight(). This is so incredibly important, so don't ignore this detail! Insert the new `HuffTree` **t** into the priority queue. 
 
 I have given you code for a class called `HuffTree`. Some of it has been implemented already:
 * A `Node` inner class that contains pointers to right child node, left child node, and parent node, along with a variable to store the character and a variable to store the weight. Non-leaf nodes will have null for their character variable, while leaf nodes will have null for their right and left child nodes. Note that it will be helpful to have a `toString()` method on `Node` just for sanity checking. 
@@ -72,11 +79,6 @@ I have given you code for a class called `HuffTree`. Some of it has been impleme
 
 For Step 2, you will implement the mergeTrees() method. 
 
-2. For each character key in your `TreeMap`, create a `HuffTree` instance. Initially, the `top` of each `HuffTree` will point at a `Node` that has null pointers for its right child and left child, and has the character variable set to the character and the weight variable set to the frequency of that character.
-
-3. Put all of these `HuffTree`s in a Java `PriorityQueue`. (*You SHOULD NOT create your own priority queue! Use Java's implementation, which you can read about [here](https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html)*). You can create a `PriorityQueue` by adding elements one by one with `add()` or by giving it a whole Collection (e.g., e.g., an `ArrayList` of the ordered keys of the `TreeMap`) of elements as an argument to the constructor.
-
-4. You now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, `poll()` off the two `HuffTree`s with the smallest weights, **t1** and **t2**. Construct a new `HuffTree` **t** with **t1** and **t2** as **left** and **right** children, respectively, and with weight = t1.weight() + t2.weight(). This is so incredibly important, so don't ignore this detail! Insert the new `HuffTree` **t** into the priority queue. 
 
 ## Step 3: Extracting the Huffman codes for each character
 * You should have a method that can traverse a `HuffTree` from its top node down to its leaf nodes in order to determine what sequences of left and right turns (i.e., 0s and 1s) that were required to arrive at each leaf node. This will be the Huffman code of the character at that leaf node.
