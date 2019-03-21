@@ -179,7 +179,7 @@ Java has a 16-bit (2-byte) char data type. When you write out to the binary file
 
 2. Your code must compile. If it does not compile, you will get a 0. Get started early so that you do not run into compilation errors in the late evening the day it is due.
 
-3. Comment your code and indent propertly. This will be worth 10% of your final grade.
+3. Comment your code and indent propertly. This will be worth 10% of your grade on this problem set (i.e., 1 point).
 
 
 
