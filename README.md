@@ -1,6 +1,6 @@
 # Problem Set 8: Huffman coding
 
-## Due Friday, March 29 @ 11:59pm
+## Due Monday, April 1 @ 11:59pm
 
 ---
 
@@ -70,7 +70,7 @@ First implement `mergeTrees()` in `HuffTree.java`. This takes two HuffTree objec
 ### `buildHuffmanTree()` in `Huff.java`
 Next implement the `buildHuffmanTree()` method in `Huff.java`. I've created a `PriorityQueue` of `HuffTree` objects for you. (*You SHOULD NOT write your own priority queue implementation. You can read about Java's `PriorityQueue` class [here](https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html)*) You will need to populate the `PriorityQueue` with one `HuffTree` per character, as follows.
 
-For each character key in your `TreeMap`, create a `HuffTree` instance. Initially, the `top` of each `HuffTree` will point at a `Node` that has null pointers for its right child and left child, and has the `character` variable set to the character and the `weight` variable set to the frequency of that character. Add each new `HuffTree` you create to the `PriorityQueue` using the `add()` method.
+For each character key in your `TreeMap`, create a `HuffTree` instance. Initially, the `top` of each `HuffTree` will be a `Node` that has null pointers for its right child and left child, and has the `character` variable set to the character and the `weight` variable set to the frequency of that character. Add each new `HuffTree` you create to the `PriorityQueue` using the `add()` method.
 
 You will now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, follow this procedure to iteratively merge `HuffTree` objects into a single HuffmanTree: (1) create a new empty `HuffTree` object, called `t3`; (2) use the `poll()` method in `PriorityQueue` to get the two `HuffTree`s with the smallest weights, `t1` and `t2`. Call `mergeTrees()` on `t3` with the first argument as `t1` and the second argument as `t2`. Add `t3` to the `PriorityQueue` using `add()`. 
 
@@ -78,17 +78,17 @@ You will now have a `PriorityQueue` with one `HuffTree` for each character. Whil
 ## Task 3: Extracting the Huffman codes: `getCodes()` in `HuffTree.java` and `extractCodes()` in `Huff.java`
 After merging all these `HuffTree` objects, the `PriorityQueue` now contains exactly one element: the full Huffman tree for the input text. Remove the remaning `HuffTree` from the priority queue, and save it to the `finalTree` instance variable. 
 
-In `HuffTree.java`, complete the implementation of `getCodes()`. This method reads off the path to each leaf (character) in the calling `HuffTree` and saves out the character-path pair to its `codes` `TreeMap` instance variable. Here is some pseudocode you might find useful:
+In `HuffTree.java`, complete the implementation of `getCodes()`. This method reads off the path to each leaf (character) in the calling `HuffTree` and saves out the character-path pair to its `codes` `TreeMap` instance variable. Here is some pseudocode you might find useful.
 
 ```
 public String getCodes(Node n, String path) {
   if n is null
-    return
+    return s
 
   if the node's leftchild and rightchild are both null
     you are at a leaf!
-    get the character at n
-    enter character and its path as a key-value pair in the codes TreeMap
+    enter character of n and its path as a key-value pair in the codes TreeMap
+    return s
   
   if the left child is not null
     create a new String by appending "0" to path  
@@ -100,11 +100,11 @@ public String getCodes(Node n, String path) {
 }  
 ```
 
-Call the `getCodes()` method on `finalTree`, and then set `huffCodes` to equal the `codes` variable of `finalTree`.
+Call the `getCodes()` method on `finalTree`, and then set `huffCodes` in `Huff.java` to equal the `codes` variable of `finalTree`.
 
 
 ## Task 4: Writing to a binary file: `writeOutFile()` in `Huff.java`
-You will use the S&W `BinaryOut` class, an instance of which is created by the `FileIOC` class in `Huff.java`, to print out to the compressed binary file. Complete the implementation of the `writeOuFile()` method in `Huff.java`, as follows.
+You will use the `BinaryOut` class, an instance of which is created by the `FileIOC` class in `Huff.java`, to print out to the compressed binary file. Complete the implementation of the `writeOuFile()` method in `Huff.java`, as follows.
 
 1. Open the binary output file. (Code for this is included in `Huff.java`.)
 
@@ -171,11 +171,13 @@ Java has a 16-bit (2-byte) char data type. When you write out to the binary file
 
 ---
 
-## Final words
+## Important notes on grading
 
-This is hard, so get started early. If you can do this, you are doing great!
+1. The files **must be in the `src` directory**. Do not move files around, or things will go very wrong. You will lose points for moving files out of the `src` directory.
 
-When you turn your code in, write lots of comments. Please don't ask me about null pointer exception without trying to figure them out yourself by printing stuff out to the screen.
+2. Your code must compile. If it does not compile, you will get a 0. Get started early so that you do not run into compilation errors in the late evening the day it is due.
+
+3. Comment your code and indent propertly. This will be worth 10% of your final grade.
 
 
 
