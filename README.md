@@ -55,13 +55,13 @@ There four tasks involved in this problem set:
 4. Writing this information, along with a Huffman encoded version of the original text, to a binary file, which will be your compressed file. 
 
 
-## Step 1: Creating a frequency table: `readInFile()` method in `Huff.java`
+## Task 1: Creating a frequency table: `readInFile()` method in `Huff.java`
 I've given you a `TreeMap` in `Huff.java` called `charCounts` that will serve as your frequency table. It will map a character (stored as an `Integer`, which is the ASCII code for that character) to its frequency (also stored as an `Integer`).
 
 Complete the implementation of `readInFile()` in `Huff.java`. For each character you read in, if that character aready exists as a key in the `TreeMap`, add 1 to its value (i.e., its current frequency total) in the `TreeMap`. Otherwise, add it as a key to the `TreeMap` with value `1`.
 
 
-## Step 2: Building the Huffman tree: `buildHuffmanTree()` in `Huff.java` and `mergeTrees()` in `HuffTree.java`
+## Task 2: Building the Huffman tree: `buildHuffmanTree()` in `Huff.java` and `mergeTrees()` in `HuffTree.java`
 Next you are going to build a Huffman tree that you will be able to traverse to generate the Huffman code (i.e., the sequence of 1s and 0s) for each character, just as shown in class. Some of the code for this step will go in `Huff.java` and some of it will go in `HuffTree.java`.
 
 ### `mergeTrees()` in `HuffTree.java`
@@ -75,23 +75,44 @@ For each character key in your `TreeMap`, create a `HuffTree` instance. Initiall
 You will now have a `PriorityQueue` with one `HuffTree` for each character. While there is more than one `HuffTree` in the `PriorityQueue`, follow this procedure to iteratively merge `HuffTree` objects into a single HuffmanTree: (1) create a new empty `HuffTree` object, called `t3`; (2) use the `poll()` method in `PriorityQueue` to get the two `HuffTree`s with the smallest weights, `t1` and `t2`. Call `mergeTrees()` on `t3` with the first argument as `t1` and the second argument as `t2`. Add `t3` to the `PriorityQueue` using `add()`. 
 
 
-## Step 3: Extracting the Huffman codes: `getCodes()` in `HuffTree.java` and `extractCodes()` in `Huff.java`
+## Task 3: Extracting the Huffman codes: `getCodes()` in `HuffTree.java` and `extractCodes()` in `Huff.java`
 After merging all these `HuffTree` objects, the `PriorityQueue` now contains exactly one element: the full Huffman tree for the input text. Remove the remaning `HuffTree` from the priority queue, and save it to the `finalTree` instance variable. 
 
-In `HuffTree.java`, complete the implementation of `getCodes()`. 
+In `HuffTree.java`, complete the implementation of `getCodes()`. This method reads off the path to each leaf (character) in the calling `HuffTree` and saves out the character-path pair to its `codes` `TreeMap` instance variable. Here is some pseudocode you might find useful:
+
+```
+public String getCodes(Node n, String path) {
+  if n is null
+    return
+
+  if the node's leftchild and rightchild are both null
+    you are at a leaf!
+    get the character at n
+    enter character and its path as a key-value pair in the codes TreeMap
+  
+  if the left child is not null
+    create a new String by appending "0" to path  
+    call the method with the left child and the new string as arguments
+  
+  if the right child is not null
+    create a new string by appending "1" to path  
+    call the method with the left child and the new string as arguments
+}  
+```
+
+Call the `getCodes()` method on `finalTree`, and then set `huffCodes` to equal the `codes` variable of `finalTree`.
 
 
-
-## Step 4: Writing to a binary file: `writeOutFile()` in `Huff.java`
-You will use the S&W `BinaryOut` class, an instance of which is created by the `FileIOC` class in `Huff.java`, to print out to the compressed binary file. 
+## Task 4: Writing to a binary file: `writeOutFile()` in `Huff.java`
+You will use the S&W `BinaryOut` class, an instance of which is created by the `FileIOC` class in `Huff.java`, to print out to the compressed binary file. Complete the implementation of the `writeOuFile()` method in `Huff.java`, as follows.
 
 1. Open the binary output file. (Code for this is included in `Huff.java`.)
 
-2. Write out the signature two-byte code (0x0bc0), which identifies the file as our special zip file. (This and all of the following steps that involve writing out to the binary file will use the overloaded `write()` method  in the `BinaryOut` class, as shown in the `Huff.java` code I have provided.)
+2. Write out the signature two-byte code (`0x0bc0`), which identifies the file as our special zip file. This and all of the following steps that involve writing out to the binary file will use the overloaded `write()` method  in the `BinaryOut` class, as shown in the `Huff.java` code I have provided.
 
 3. Write out, as an integer (32 bits, i.e., 4 bytes), the number of chars (keys) in the frequency table `TreeMap`.
 
-4. Next write out the symbol frequency information. For each key in the symbol table, write the key (i.e., the character) using one byte and write its integer frequency using 4 bytes. Remember, a char type is really just a value that corresponds to the decimal ASCII code for that char. To write out a char using only one byte, you can use the version of `write()` in `BinaryOut` that takes two arguments: a char and the number of bits in the char that you want to print out.
+4. Next write out the symbol frequency information. For each key in the symbol table, write the key (i.e., the character) using one byte (32 bits) and write its integer frequency using 4 bytes. Remember, a `char` type is really just a value that corresponds to the decimal ASCII code for that character. To write out a `char` using only one byte, you can use the version of `write()` in `BinaryOut` that takes two arguments: a char and the number of bits in the char that you want to print out.
 
 5. Reopen the input file, and process it character by character.
 
@@ -105,13 +126,11 @@ You will use the S&W `BinaryOut` class, an instance of which is created by the `
     bo.write(i, t.length());
 ```
 
-
 * You can proceed through the string of 0s and 1s, print out each as a boolean: false for 0 and true for 1.
 ```java
-// to write a zero, write false
-bo.write(false);
+    // to write a zero, write false
+    bo.write(false);
 ```
-
 
 7. Close the file.
 
@@ -123,13 +142,11 @@ bo.write(false);
 
 The Huff and Puff programs write and read binary files, so it will be helpful to have a tool that lets you view the contents of binary files so you can make sure you are printing out the correct bits and bytes.
 
-On a Mac or Unix system, there is a command line utility called `hexdump` that you can use to take any file and print out its hexadecimal representation. Suppose you used the `Puff.jar` to compress the sample file `lincoln.txt`. From a command line you can type:
+On a Mac or Unix system, there is a command line utility called `hexdump` that you can use to take any file and print out its hexadecimal representation. On Windows 10 in the PowerShell, you can use the `Format-Hex` command. Suppose you used the `Puff.jar` to compress the sample file `lincoln.txt`. From a command line you can type:
 
-`hexdump lincoln.zip` 
+`hexdump lincoln.zip` (or `Format-Hex lincoln.zip` in Windows 10)
 
-and the hexadecimal version of the file will appear, as demonstrated in class on Monday, October 29.
-
-If you're using Windows, have a look around the web for hex viewers and editors. In the latest version of Windows, there may be a utility included as part of the powershell, so give it a try from the terminal in Atom.
+and the hexadecimal version of the file will appear, as demonstrated in class.
 
 If you're having trouble wrapping your head around all the different bases (decimal, binary, and hex), check out this very useful online conversion tool:
 
@@ -144,34 +161,13 @@ http://www.asciitable.com
 
 Huffman codes are *variable length* codes. For example, the letter `'A'` may be represented by the 3-bit string `101` while the letter `'B'` may be represented by the 2-bit string `11`. Remember: you can't just take the string of 0s and 1s for a code, convert it to an int and print it out. If you do, you will be unnecessarily adding lots of extra zeros at the front in order to make it 32 bits. You are trying to write the fewest bits possible to your binary file. 
 
-Some options for printing out only the bits you need are discussed above in item 6 of Step 3.
+Some options for printing out only the bits you need are discussed above in item 6 of Task 4, above.
 
 #### The char data type and ASCII representations
 
 Both the Huff and Puff programs will require a table data structure (a `TreeMap`) that allows them to look up information about symbols (i.e., characters) that occur in the input text. As you know, variables of the `char` type are represented by small integers. For example, the ASCII-assigned integer representation of the letter 'A' is 65. Find an ASCII table (like [this one](http://www.asciitable.com)) that includes both decimal and hex values for each character so that you can make sure you're doing everything right. 
 
-Java has a 16-bit (2-byte) char data type. When you write out to the binary file, you are required to use only 8 bits in your frequency table. I discuss a way to write out a 16-bit char to 8 bits in the binary file above, in part 4 of Step 3. 
-
-#### Recursively printing out the leaves of a tree
-
-To print out the leaves of a binary tree you can have a void method whose argument is a node. You can call the method originally by providing the argument top.
-
-```
-if the node is null
-  return
-
-if the leftchild and rightchild are null
-  you are at a leaf, so print out the character value of that node
-  
-if the left child is not null
-  call the method on the left child
-  
-if the right child is not null
-  call the method on the right child
-  
-```
-
-To actually get the string of zeros and ones, you'll need to have an additional argument that is a string where you can store the 0s and 1s. When you call the method recursively, you'll add 0 or 1 to the string argument, depending on whether you have a left child or a right child.
+Java has a 16-bit (2-byte) char data type. When you write out to the binary file, you are required to use only 8 bits in your frequency table. I discuss a way to write out a 16-bit char to 8 bits in the binary file above, in part 6 of Task 3. 
 
 ---
 
