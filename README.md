@@ -41,6 +41,13 @@ Without writing any code, you can try out the jar files from a command line as f
 > diff lincoln.txt samples/lincoln.txt  # compare the two files
 >                                       # if there's no output from diff, success!
 ```
+Once you have your version of `Huff.java` working properly, you will be able to replace the second command above with 
+
+```
+> java Huff lincoln.txt
+```
+
+and get exactly the same results.
 
 ### Four tasks
 
