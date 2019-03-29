@@ -54,7 +54,7 @@ public class Huff {
       // The first time you see c, add it as a key to charCounts with value 1.
       // Each subsequent time you see c, add one to its value in the map.
       // You'll be using the get(), put(), and containsKey() methods in TreeMap.
-
+      
       }
 
 
