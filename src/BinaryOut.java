@@ -126,7 +126,7 @@ public final class BinaryOut {
         }
     }
 
-    // write out any remaining bits in buffer to the binary output stream, padding with 0s
+    // writes out any remaining bits in buffer to the binary output stream, padding with 0s
     private void clearBuffer() {
         if (n == 0) return;
         if (n > 0) buffer <<= (8 - n);
