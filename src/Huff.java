@@ -66,10 +66,6 @@ public class Huff {
       // You'll be using the get(), put(), and containsKey() methods in TreeMap.
 
 
-
-
-
-
   // You have to close the file, just the way you would in Python.
   fr.close();
 
