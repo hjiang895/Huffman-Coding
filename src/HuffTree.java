@@ -67,8 +67,7 @@ public class HuffTree implements Comparable<HuffTree> {
 
     //we assign the top node of the first and second argument to the
     //right child and left child of the calling HuffTrees
-    //then we call the totalWeight method to find the overall weight
-    //of the calling HuffTree and assign it
+    //then we assign top.weight to the weight of top's right child and left child 
 
 
 
